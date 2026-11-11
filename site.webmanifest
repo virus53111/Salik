@@ -1,0 +1,17 @@
+{
+  "name": "CenaRadar — Būvdarbu cenas Latvijā",
+  "short_name": "CenaRadar",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f7f2",
+  "theme_color": "#101313",
+  "lang": "lv",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

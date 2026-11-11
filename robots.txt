@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /site.webmanifest
+Sitemap: https://cenaradar.online/sitemap.xml
