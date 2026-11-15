@@ -163,10 +163,15 @@ export function prepareSearchMetadata(path, html) {
     html = html.replace('</main>', '<section class="container" aria-labelledby="estimate-guides"><h2 id="estimate-guides">' +
       labels[lang].heading + '</h2><ul>' + links + '</ul></section></main>');
   }
+  const relatedGuides = guides.filter(guide => guide.related + 'index.html' === '/' + path);
+  if (relatedGuides.length && html.includes('</article>')) {
+    const links = relatedGuides.map(guide => '<li><a href="' + pathFor(guide, 'lv') + '">' + escape(guide.lv.title) + '</a></li>').join('');
+    html = html.replace('</article>', '<section><h2>' + labels.lv.heading + '</h2><ul>' + links + '</ul></section></article>');
+  }
   return html;
 }
 
-export function writeSearchGuides(sitemap) {
+export function writeSearchGuides(sitemap, analyticsTag) {
   const entries = [];
   for (const guide of guides) {
     for (const lang of ['lv', 'ru']) {
@@ -189,7 +194,7 @@ export function writeSearchGuides(sitemap) {
         '<meta name="description" content="' + description + '"><link rel="canonical" href="' + canonical + '">' + alternates(guide) +
         '<meta property="og:type" content="article"><meta property="og:title" content="' + title + '"><meta property="og:description" content="' + description + '">' +
         '<meta property="og:url" content="' + canonical + '"><link rel="icon" href="/favicon.svg">' +
-        '<link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/article.css"><script type="application/ld+json">' + schema + '</script></head>' +
+        '<link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/article.css"><script type="application/ld+json">' + schema + '</script>' + analyticsTag + '</head>' +
         '<body class="article-page"><header class="site-header"><nav class="container header-in"><a class="brand" href="' + home + '">CenaRadar</a>' +
         '<a href="' + counterpart + '">' + words.other + '</a></nav></header><main><section class="article-hero"><div class="container"><h1>' +
         title + '</h1><p class="article-lead">' + description + '</p><a class="btn btn-lime" href="' + (lang === 'ru' ? '/?lang=ru#repair-wizard' : '/#repair-wizard') + '">' + words.tool +
