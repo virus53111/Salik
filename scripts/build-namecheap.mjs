@@ -5,7 +5,7 @@ import { dirname, join } from 'node:path';
 import { prepareSearchMetadata, writeSearchGuides } from './search-guides.mjs';
 const files = [
   'index.html','styles.css','app.js','app-v3.js','styles-v3.css','data.js','app-v4.js','styles-v4.css','data-v4.js','app-v5.js','styles-v5.css','app-v6.js','styles-v6.css','app-v7.js','styles-v7.css','app-v8.js','styles-v8.css','app-v9.js','styles-v9.css','house-3d-v1.js','app-v10.js','styles-v10.css','room-3d-v1.js','app-v11.js','styles-v11.css','app-v12.js','styles-v12.css','app-v13.js','styles-v13.css','app-v14.js','styles-v14.css','app-v15.js','styles-v15.css','app-v16.js','styles-v16.css','article.css','favicon.svg',
-  'og.svg','robots.txt','sitemap.xml','site.webmanifest',
+  'og.svg','robots.txt','sitemap.xml','site.webmanifest','yandex_7e927cbd5094cb95.html',
   'ru/index.html','metodika/index.html',
   'cenas/flizesana/index.html','cenas/krasosana/index.html',
   'cenas/elektrika/index.html','cenas/laminats/index.html',
@@ -43,9 +43,11 @@ const analyticsTag = "<script>\n(() => {\n  const key = 'analytics-consent';\n  
 for (const { path, buf } of assets) {
   const full = join('dist', path);
   mkdirSync(dirname(full), { recursive: true });
-  const content = path.endsWith('.html')
-    ? prepareSearchMetadata(path, buf.toString('utf8')).replace('</head>', () => analyticsTag + '</head>')
-    : buf;
+  const content = path === 'yandex_7e927cbd5094cb95.html'
+    ? buf // Yandex verification must remain exactly as supplied.
+    : path.endsWith('.html')
+      ? prepareSearchMetadata(path, buf.toString('utf8')).replace('</head>', () => analyticsTag + '</head>')
+      : buf;
   writeFileSync(full, content);
 }
 writeFileSync('dist/404.html', '<!doctype html><html lang="lv"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>404 — CenaRadar</title><body style="font:16px system-ui;background:#121b15;color:#fff;text-align:center;padding:15vh 20px"><h1 style="font-size:64px">404</h1><h2>Lapa nav atrasta</h2><p><a style="color:#c6f462" href="/">Atgriezties CenaRadar sākumā ↗</a></p></body></html>\n');
