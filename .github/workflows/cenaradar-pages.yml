@@ -1,0 +1,47 @@
+name: Publish CenaRadar to GitHub Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: cenaradar-pages
+  cancel-in-progress: false
+jobs:
+  deploy:
+    name: Build and deploy CenaRadar
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build static website
+        run: |
+          set -euo pipefail
+          node scripts/build-namecheap.mjs
+          test -s dist/index.html
+          test -s dist/sitemap.xml
+          test -s dist/404.html
+          touch dist/.nojekyll
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Upload website
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
